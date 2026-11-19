@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="preconnect" href="https://raw.githubusercontent.com"><script async src="https://www.googletagmanager.com/gtag/js?id=G-8K9SYB8360"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8K9SYB8360');</script><base href="https://cdn.jsdelivr.net/gh/Ale7208/geometry-dash-wasm/">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="preconnect" href="https://raw.githubusercontent.com"><base href="https://cdn.jsdelivr.net/gh/Ale7208/geometry-dash-wasm/">
 <script>
 (function () {
   window.gdInLevel = false;
@@ -62,7 +62,6 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Ale7208/geometry-dash-wasm@main/ref/preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="google-site-verification" content="h4_sQV9VhfwF6j7msHwH1gg3wdFLno6LoYl5_wFFZkg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Geometry Dash Webport">
 <meta name="twitter:description" content="Geometry Dash Webport: unofficial port compiled to WASM, version 2.2091. Runs in your browser with no installation. Online levels, custom songs and automatic saving.">
@@ -110,7 +109,7 @@ var url=window.__gdProxyBuild(base,target);
 var out=(typeof input==="string")?url:((typeof Request!=="undefined")?new Request(url,input):url);
 function advance(res){var next=nextProxy(target,idx);return next<0?res:attempt(input,init,target,next);}
 return nativeFetch(out,init).then(function(res){
-if(res.status===429||res.status===1027){coolDown(base);return advance(res);}
+if(res.status===429){coolDown(base);return advance(res);}
 return cloudflareHtml(res).then(function(isCloudflare){if(isCloudflare){coolDown(base);return advance(res);}if(retryable(res.status))return advance(res);return res;});
 },function(err){var next=nextProxy(target,idx);if(next>=0)return attempt(input,init,target,next);throw err;});
 }
@@ -123,8 +122,8 @@ function localScoreXhr(xhr,target){var state=1;function define(name,get){Object.
 function accountResponseValue(xhr){try{if(xhr.responseType===""||xhr.responseType==="text")return xhr.responseText;var value=xhr.response;return typeof value==="string"?value:JSON.stringify(value);}catch(e){return "<response unavailable>";}}
 function retryAccountXhr(xhr,event){var state=xhr.__gdAccountState;if(!state)return false;if(event.type==="loadend"){if(state.suppressLoadEnd){state.suppressLoadEnd=false;event.stopImmediatePropagation();return true;}return false;}if(event.type==="readystatechange"){if(state.inFlight&&state.attempt+1<window.__gdAccountProxyBases.length&&xhr.readyState===4&&!(xhr.status>=200&&xhr.status<300))event.stopImmediatePropagation();return false;}if(!state.inFlight)return false;var base=window.__gdAccountProxyBases[(state.first+state.attempt)%window.__gdAccountProxyBases.length];accountDebug(base,event.type==="load"?accountResponseValue(xhr):"<network error>");if(event.type==="load"&&xhr.status>=200&&xhr.status<300){state.inFlight=false;return false;}if(state.attempt+1>=window.__gdAccountProxyBases.length){state.inFlight=false;return false;}event.stopImmediatePropagation();state.inFlight=false;state.suppressLoadEnd=true;state.attempt++;setTimeout(function(){var nextBase=window.__gdAccountProxyBases[(state.first+state.attempt)%window.__gdAccountProxyBases.length],args=state.openArgs.slice(),timeout=xhr.timeout,withCredentials=xhr.withCredentials,responseType=xhr.responseType;args[1]=window.__gdProxyBuild(nextBase,state.target);nativeOpen.apply(xhr,args);xhr.timeout=timeout;xhr.withCredentials=withCredentials;xhr.responseType=responseType;for(var i=0;i<state.headers.length;i++)nativeSetRequestHeader.call(xhr,state.headers[i][0],state.headers[i][1]);state.inFlight=true;nativeSend.call(xhr,state.body);},0);return true;}
 function proxyXhrCloudflare(xhr){var type=(xhr.getResponseHeader("content-type")||"").toLowerCase();if(type.indexOf("html")<0)return false;if((xhr.getResponseHeader("server")||"").toLowerCase().indexOf("cloudflare")>=0||xhr.getResponseHeader("cf-ray"))return true;try{return (xhr.responseType===""||xhr.responseType==="text")&&/cloudflare|cf-error|error\s*1027/i.test(xhr.responseText);}catch(e){return false;}}
-function proxyXhrShouldRetry(xhr){return retryable(xhr.status)||xhr.status===1027||proxyXhrCloudflare(xhr);}
-function retryProxyXhr(xhr,event){var state=xhr.__gdProxyState;if(!state)return false;if(event.type==="loadend"){if(state.suppressLoadEnd){state.suppressLoadEnd=false;event.stopImmediatePropagation();return true;}return false;}var next=nextProxy(state.target,state.index);if(event.type==="readystatechange"){if(state.inFlight&&next>=0&&xhr.readyState===4&&proxyXhrShouldRetry(xhr))event.stopImmediatePropagation();return false;}if(!state.inFlight)return false;if(event.type==="load"&&!proxyXhrShouldRetry(xhr)){state.inFlight=false;return false;}if(event.type!=="load"&&event.type!=="error"&&event.type!=="timeout")return false;if(xhr.status===429||xhr.status===1027||proxyXhrCloudflare(xhr))coolDown(window.__gdProxyBases[state.index]);if(next<0){state.inFlight=false;return false;}event.stopImmediatePropagation();state.inFlight=false;state.suppressLoadEnd=true;state.index=next;setTimeout(function(){var args=state.openArgs.slice(),timeout=xhr.timeout,withCredentials=xhr.withCredentials,responseType=xhr.responseType;args[1]=window.__gdProxyBuild(window.__gdProxyBases[state.index],state.target);nativeOpen.apply(xhr,args);xhr.timeout=timeout;xhr.withCredentials=withCredentials;xhr.responseType=responseType;for(var i=0;i<state.headers.length;i++)nativeSetRequestHeader.call(xhr,state.headers[i][0],state.headers[i][1]);state.inFlight=true;nativeSend.call(xhr,state.body);},0);return true;}
+function proxyXhrShouldRetry(xhr){return retryable(xhr.status)||proxyXhrCloudflare(xhr);}
+function retryProxyXhr(xhr,event){var state=xhr.__gdProxyState;if(!state)return false;if(event.type==="loadend"){if(state.suppressLoadEnd){state.suppressLoadEnd=false;event.stopImmediatePropagation();return true;}return false;}var next=nextProxy(state.target,state.index);if(event.type==="readystatechange"){if(state.inFlight&&next>=0&&xhr.readyState===4&&proxyXhrShouldRetry(xhr))event.stopImmediatePropagation();return false;}if(!state.inFlight)return false;if(event.type==="load"&&!proxyXhrShouldRetry(xhr)){state.inFlight=false;return false;}if(event.type!=="load"&&event.type!=="error"&&event.type!=="timeout")return false;if(xhr.status===429||proxyXhrCloudflare(xhr))coolDown(window.__gdProxyBases[state.index]);if(next<0){state.inFlight=false;return false;}event.stopImmediatePropagation();state.inFlight=false;state.suppressLoadEnd=true;state.index=next;setTimeout(function(){var args=state.openArgs.slice(),timeout=xhr.timeout,withCredentials=xhr.withCredentials,responseType=xhr.responseType;args[1]=window.__gdProxyBuild(window.__gdProxyBases[state.index],state.target);nativeOpen.apply(xhr,args);xhr.timeout=timeout;xhr.withCredentials=withCredentials;xhr.responseType=responseType;for(var i=0;i<state.headers.length;i++)nativeSetRequestHeader.call(xhr,state.headers[i][0],state.headers[i][1]);state.inFlight=true;nativeSend.call(xhr,state.body);},0);return true;}
 XMLHttpRequest.prototype.send=function(){var xhr=this,account=this.__gdAccountState,state=this.__gdProxyState;if(account){account.body=arguments[0];account.inFlight=true;if(!account.listener){account.listener=true;["load","error","timeout","loadend","readystatechange"].forEach(function(type){xhr.addEventListener(type,function(event){retryAccountXhr(xhr,event);},true);});}return nativeSend.apply(this,arguments);}if(this.__gdProxyScoreTarget&&missingScoreSession(arguments[0])){localScoreXhr(this,this.__gdProxyScoreTarget);return;}if(state){state.body=arguments[0];state.inFlight=true;if(!xhr.__gdProxyRetryListener){xhr.__gdProxyRetryListener=true;["load","error","timeout","loadend","readystatechange"].forEach(function(type){xhr.addEventListener(type,function(event){retryProxyXhr(xhr,event);},true);});}}return nativeSend.apply(this,arguments);};
 })();
 </script>
@@ -862,7 +861,7 @@ document.addEventListener("click",function(){try{if(window.parent!==window)windo
   function version() { return typeof GD_BUILD_ID === 'string' ? GD_BUILD_ID : 'dev'; }
   function manifest() {
     if (!manifestPromise) manifestPromise = fetch('gd_assets.json?v=' + version(), {cache: 'no-cache'})
-      .then(function (r) { if (!r.ok) throw new Error('Asset manifest HTTP ' + r.status); return r.json(); });
+      .then(function (r) { if (!r.ok) throw new Error('Asset manifest HTTP ' + r.status); return r.json(); }).catch(function (e) { manifestPromise = null; throw e; });
     return manifestPromise;
   }
   function report(kind, loaded, total) {
@@ -1399,7 +1398,7 @@ var backup = await readBackupRecord(backupDb, 'cur:' + spec.name);
 if (!backup) backup = await readBackupRecord(backupDb, 'prev:' + spec.name);
 if (!backup) continue;
 var timestamp = backup.timestamp;
-if (gdBackupIsBlockedByFs(spec.name, backup, timestamp)) {
+if (gdBackupIsBlockedByFs(spec.name, backup.bytes, timestamp)) {
 persistDebug('kept newer or larger virtual FS file ' + spec.name);
 continue;
 }
@@ -1556,6 +1555,12 @@ window.gdFirstFrame = function () {
 forceAssetsDone();
 setProgress(100);
 };
+window.__gdOwnsSaves = !navigator.locks;
+if (navigator.locks) navigator.locks.request('gd-saves', { ifAvailable: true }, function (lock) {
+if (!lock) { alert('Geometry Dash is already open in another tab. Progress in THIS tab will not be saved.'); return; }
+window.__gdOwnsSaves = true;
+return new Promise(function () {});
+});
 var gdSaveTimer = null;
 var gdLastSave = 0;
 var gdSavePromise = null;
@@ -1572,6 +1577,7 @@ Module._gd_autosave_set(enabled ? 1 : 0);
 }
 }
 function performSave() {
+if (!window.__gdOwnsSaves) return Promise.resolve();
 try {
 if (Module._gd_request_save) Module._gd_request_save();
 } catch (e) { console.error('Failed to save progress:', e); }
@@ -1614,7 +1620,7 @@ if (!allowInLevel && window.gdInLevel === true) {
 scheduleSave(false);
 return;
 }
-if (!now && Date.now() - gdLastSave < 180000) return;
+if (!now && Date.now() - gdLastSave < 30000) return;
 if (now && gdDeferredLevelSave) {
 gdDeferredLevelSave = false;
 if (GD_DEBUG) console.info('[save] Executing deferred save after leaving the level');
@@ -1845,7 +1851,7 @@ one();
 g.onsuccess = function () {
 try {
 if (g.result !== undefined && g.result !== null) {
-var s = String(k);
+var s = normalizeSaveKey(k);
 var profileName = gdProfileName(s);
 var restoredLength = g.result.byteLength ||
 (ArrayBuffer.isView(g.result) && g.result.byteLength) || 0;
@@ -2124,10 +2130,10 @@ setProgress(76);
 },
 onRuntimeInitialized: function () {
 window.__gdRuntimeReady = true;
-if (!/[?&]noauto/.test(location.search))
+if (!/[?&]noauto(?:=|&|$)/.test(location.search))
 setInterval(function () { scheduleSave(false); }, 30000);
 if (Module._gd_log_set) Module._gd_log_set(GD_DEBUG ? 1 : 0);
-if (/[?&]noauto/.test(location.search) && Module._gd_autosave_set) {
+if (/[?&]noauto(?:=|&|$)/.test(location.search) && Module._gd_autosave_set) {
 if (GD_DEBUG)
 console.info('[save] _gd_autosave_set disabled; reason: noauto');
 Module._gd_autosave_set(0);
